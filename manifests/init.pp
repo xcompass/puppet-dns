@@ -48,6 +48,7 @@ class dns (
   $controls             = $::dns::params::controls,
   $service_ensure       = $::dns::params::service_ensure,
   $service_enable       = $::dns::params::service_enable,
+  $zones                = {},
 ) inherits dns::params {
   validate_array($dns::forwarders)
   validate_array($dns::allow_recursion)
@@ -68,6 +69,7 @@ class dns (
 
   class { '::dns::install': } ~>
   class { '::dns::config': } ~>
-  class { '::dns::service': } ->
-  Class['dns']
+  class { '::dns::service': }
+
+  create_resources('::dns::zone', $dns::zones)
 }
